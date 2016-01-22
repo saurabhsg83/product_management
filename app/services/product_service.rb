@@ -15,7 +15,7 @@ class ProductService
     if !delete_status
       {:message => 'Unable to delete, validations failed', :status => 400 }
     else
-      {:message => 'Product deleted successfully', :status => 200 , :meta => {:id => product.id, :name => product.name}}
+      {:message => 'Product deleted successfully', :status => 200 , :meta => {:id => product_id}}
     end
   end
 
@@ -77,7 +77,7 @@ class ProductService
         if original_size_ids.include? size_id.to_i
           product_size = ProductSize.where(product_id: product.id, size_list_id: size_id.to_i, status: 2).first
           product_size_id = product_size.id if product_size.present?
-          original_property_ids = product_size.product_inventories.where(:status => 2).map {|x| x.property_id}
+          original_property_ids = product_size.product_inventories.where(:status => 2).map {|x| x.property_id.to_i}
           inventory_data.each do |data|
             new_property_ids.push(data[:property_id].to_i)
             if original_property_ids.include? data[:property_id].to_i
@@ -88,6 +88,8 @@ class ProductService
               create_inventory_data(product_size, data, product_inventory)
             end
           end
+          original_property_ids  = original_property_ids.uniq
+          new_property_ids = new_property_ids.uniq
           delete_item_inventories(original_property_ids - new_property_ids) if (original_property_ids - new_property_ids).length > 0
         else
           product_size = ProductSize.new
@@ -99,6 +101,8 @@ class ProductService
         end
       end
     end
+    original_size_ids = original_size_ids.uniq
+    new_size_ids = new_size_ids.uniq
     delete_item_sizes(original_size_ids - new_size_ids) if (original_size_ids - new_size_ids).length > 0
     return {:message => 'Item updated successfully', :status => 200 }
   end
@@ -124,8 +128,7 @@ class ProductService
   end
 
   def product
-    @product = Product.where(id: product_id, :status => 2).first
-    @product
+    Product.where(id: product_id, :status => 2).first
   end
 
   def product_sizes
@@ -137,11 +140,11 @@ class ProductService
   end
 
   def delete_item_inventories ids
-    ProductInventory.where(:id => ids).update_all(:status => 4)
+    ProductInventory.where(:id => ids, :status => 2).update_all(:status => 4)
   end
 
   def delete_item_sizes ids
-    ProductSize.where(:id => ids).update_all(:status => 4)
+    ProductSize.where(:id => ids, :status => 2).update_all(:status => 4)
   end
 
 
