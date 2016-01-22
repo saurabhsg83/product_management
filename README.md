@@ -9,13 +9,13 @@ deployable on Heroku.
 ​
 Installation
 ==
-git clone git@github.com:saurabhsg83/product_management.git
-cd product_management
-bundle install
-heroku create ()
+git clone git@github.com:saurabhsg83/product_management.git <br>
+cd product_management <br>
+bundle install <br>
+heroku create
 ​
 Deployment
 ==
-On heroku:
-1. ./deploy.sh
+On heroku: <br>
+1. ./deploy.sh <br>
 2. heroku run rake db:seed (only for the first time)
