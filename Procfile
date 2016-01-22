@@ -1,3 +1,3 @@
 bundle install
-rake db:migrate
-rake db:seed
+heroku run rake db:migrate
+heroku run rake db:migrate
