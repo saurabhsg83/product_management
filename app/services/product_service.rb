@@ -266,7 +266,7 @@ class ProductService
 
   def product_validation
     if name.blank?
-      return {:message => 'Product name cannot be empty', :status => false }
+      return {:message => 'Product name cant be empty', :status => false }
     end
 
     brand = Brand.find(brand_id) rescue nil
