@@ -162,8 +162,8 @@ class ProductService
     invalid_size_ids = []
     params[:product_sizes].each do |size|
       size.each do |size_id, data|
-        size_id = SizeList.find(size_id.to_i) rescue nil
-        invalid_size_ids.push(size_id) if size_id.nil?
+        sizes = SizeList.find(size_id.to_i) rescue nil
+        invalid_size_ids.push(size_id.to_i) if sizes.nil?
       end
     end
 
