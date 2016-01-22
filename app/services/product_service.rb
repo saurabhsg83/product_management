@@ -51,7 +51,7 @@ class ProductService
 
   def search_products
     return {:data => nil, :message => 'Search parameter is empty', :status => 400 } if name.blank?
-    products = Product.where("name LIKE ? AND status = ?", "%#{name}%", 2).all.entries
+    products = Product.where("name LIKE ? AND status = ?", "%#{params[:name]}%", 2).all.entries
     message = 'No products are available for the given search' if products.blank?
     message = 'Returning products corresponding to search' if !products.blank?
     return {:data => products, :message => message, :status => 200 , :meta => {:count => products.count}}
